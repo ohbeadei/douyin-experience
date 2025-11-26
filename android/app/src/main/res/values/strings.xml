@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">douyin-experience</string>
+    <string name="title_activity_main">douyin-experience</string>
+    <string name="package_name">com.yourname.douyin</string>
+    <string name="custom_url_scheme">com.yourname.douyin</string>
+</resources>
