@@ -1,16 +1,104 @@
-# React + Vite
+# Douyin Experience App
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## 项目概览
 
-Currently, two official plugins are available:
+这是一个模拟抖音“经验”频道的前端小项目，使用 React 构建。主要功能包括单/双列切换、下拉刷新、无限加载以及用户点赞交互。页面响应式良好，既能在移动端流畅展示，也兼容桌面端。
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+这个项目主要用于练手、演示前端能力，同时可以作为技术分享案例。
 
-## React Compiler
+---
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## 核心功能
 
-## Expanding the ESLint configuration
+* **布局切换**：顶部按钮可以在单列和双列之间切换。
+* **下拉刷新**：支持移动端触摸下拉和桌面鼠标下拉，超过阈值自动刷新。
+* **无限加载**：滚动到底部自动加载更多数据，如果本地 mock 数据不足，会自动生成新内容。
+* **用户互动**：卡片支持点赞/取消点赞，点赞数量实时更新。
+* **图片优化**：图片采用懒加载，未加载前显示占位，避免布局抖动。
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+---
+
+## 项目结构
+
+```
+douyin-experience/
+ ├─ src/
+ │   ├─ components/
+ │   │    └─ Card.jsx         # 单条卡片组件
+ │   ├─ pages/
+ │   │    └─ Home.jsx         # 主页面逻辑
+ │   ├─ data/
+ │   │    └─ mockData.json    # 初始 mock 数据
+ │   └─ App.jsx               # 入口组件
+ ├─ public/
+ │    └─ index.html           # 静态资源
+ ├─ package.json
+ └─ README.md
+```
+
+---
+
+## 快速开始
+
+1. 克隆仓库：
+
+```bash
+git clone https://github.com/ohbeadei/douyin-experience.git
+cd douyin-experience
+```
+
+2. 安装依赖：
+
+```bash
+npm install
+# 或者使用 yarn
+yarn install
+```
+
+3. 启动开发环境：
+
+```bash
+npm start
+# 或 yarn start
+```
+
+4. 打包项目：
+
+```bash
+npm run build
+# 或 yarn build
+```
+
+> 注意：页面中的图片都是网络图片，请确保访问网络畅通。
+
+---
+
+## 技术亮点
+
+* 使用 **IntersectionObserver** 实现无限加载，避免滚动事件监听性能开销。
+* 卡片图片未加载前使用占位 + padding-top 保持比例，加载后渐显，避免布局抖动。
+* 下拉刷新同时支持 **移动端触摸事件** 和 **桌面端鼠标事件**，兼容性较好。
+* 动态生成 mock 数据，当本地数据不足时自动补充，保证无限加载体验。
+
+---
+
+## 开发总结
+
+在开发过程中主要遇到的技术问题及优化思路：
+
+1. **图片加载与布局抖动**  
+   - 问题：内容图片可能因为 `loading="lazy"` 与瀑布流布局，`onLoad` 未触发，导致 `display: loaded ? "block" : "none"` 永远不显示。  
+   - 解决方案：使用占位层保留空间，同时调整懒加载逻辑或去掉 `display: none` 条件，让图片始终可见。
+
+2. **无限加载数据不足**  
+   - 问题：滚动到底部时，本地 mock 数据数量不足，导致加载中断。  
+   - 解决方案：动态生成新 mock 数据，保证滚动时能持续加载。
+
+3. **下拉刷新事件兼容性**  
+   - 问题：移动端 touch 和桌面端 mouse 事件不同，直接使用可能触发不一致。  
+   - 解决方案：分别处理触摸和鼠标事件，并控制刷新动画与状态，保证两端都能正确触发下拉刷新。
+
+4. **图片渐显与占位控制**  
+   - 问题：小头像可以显示但大图不显示，主要是 `onLoad` 控制 `loaded` 状态，懒加载可能延迟触发。  
+   - 解决方案：通过占位层 + 图片渐显方式，优化用户体验，保证布局稳定。
+
